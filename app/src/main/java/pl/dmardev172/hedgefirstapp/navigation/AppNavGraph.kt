@@ -20,7 +20,7 @@ fun AppNavGraph() {
     ) {
         composable(Screen.Home.route) {
             HomeScreen(
-                onNavigateToDetails = { id ->
+                onItemClick = { id ->
                     navController.navigate(Screen.Details.createRoute(id))
                 }
             )
