@@ -25,7 +25,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
 //                    ItemsScreen()
-                    ProfileScreen()
+//                    ProfileScreen()
+                    App()
                 }
             }
         }

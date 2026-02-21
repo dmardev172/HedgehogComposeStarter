@@ -76,7 +76,7 @@ fun CompactProfileScreen() {
 
         UserInfo(
             title = "Email",
-            content = "exam.ple@gm.com"
+            content = "ahmed.guedmioui@example.com"
         )
 
         UserInfo(
