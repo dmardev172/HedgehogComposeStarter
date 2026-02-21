@@ -12,12 +12,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun HomeScreen(onNavigateToDetails: (Int) -> Unit) {
 //    Button(onClick = onClick) { Text("Go to details") } //yaycarnia haha
     Surface(modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)) {
         Row(modifier = Modifier.padding(24.dp)) {
             OutlinedButton(
-                onClick = onClick,
+                onClick = { onNavigateToDetails(5) },
                 border = BorderStroke(1.dp, Color.Blue),
                 modifier = Modifier.padding(8.dp)
             ) { Text("Go to details") }
