@@ -1,4 +1,4 @@
-package pl.dmardev172.hedgefirstapp
+package pl.dmardev172.hedgefirstapp.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
@@ -6,12 +6,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import pl.dmardev172.hedgefirstapp.screen.DetailsScreen
-import pl.dmardev172.hedgefirstapp.screen.HomeScreen
 import pl.dmardev172.hedgefirstapp.screen.Screen
+import pl.dmardev172.hedgefirstapp.ui.details.DetailsScreen
+import pl.dmardev172.hedgefirstapp.ui.home.HomeScreen
 
 @Composable
-fun App() {
+fun AppNavGraph() {
     val navController = rememberNavController()
 
     NavHost(
