@@ -70,8 +70,17 @@ dependencies {
 //    implementation("androidx.navigation3:navigation3-runtime-jvmstubs:1.0.0-alpha07") //Android Gradle plugin 8.9.1
 //    implementation("androidx.navigation3:navigation3-ui-jvmstubs:1.0.0-alpha07") //1.0.1
     implementation("androidx.navigation:navigation-compose:2.8.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7") // 2.7.0  2.9.2 ??
 
+    // Lifecycle
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7") // 2.9.2 ?? not for current AGP
+
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1") //1.6.4
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.11.0") //2.9.0
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
     // Tests
 //    testImplementation(libs.junit)
 //    androidTestImplementation(libs.androidx.test.ext.junit)
