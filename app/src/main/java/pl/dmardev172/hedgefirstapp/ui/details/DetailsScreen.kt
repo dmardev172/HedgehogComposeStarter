@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import pl.dmardev172.hedgefirstapp.UiState
 
 @Composable
 fun DetailsScreen(
@@ -33,20 +34,30 @@ fun DetailsScreen(
         }
     )
 
-    val post by viewModel.post.collectAsState()
+    val state by viewModel.uiState.collectAsState()
 
     Surface(modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)) {
         Column(modifier = Modifier.padding(16.dp)) {
 
-            if (post == null) {
-                CircularProgressIndicator()
-            } else {
-                Text(
-                    text = post!!.title,
-                    style = MaterialTheme.typography.headlineMedium
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-                Text(text = post!!.body)
+            when (state) {
+
+                UiState.Loading -> {
+                    CircularProgressIndicator()
+                }
+
+                is UiState.Error -> {
+                    Text(text = (state as UiState.Error).message)
+                }
+
+                is UiState.Success -> {
+                    val post = (state as UiState.Success).data
+                    Text(
+                        text = post.title,
+                        style = MaterialTheme.typography.headlineMedium
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(text = post.body)
+                }
             }
 
             Spacer(modifier = Modifier.height(24.dp))

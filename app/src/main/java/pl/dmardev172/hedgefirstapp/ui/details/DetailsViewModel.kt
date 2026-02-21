@@ -7,14 +7,17 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import pl.dmardev172.hedgefirstapp.PostRepository
 import pl.dmardev172.hedgefirstapp.RetrofitInstance
+import pl.dmardev172.hedgefirstapp.UiState
 import pl.dmardev172.hedgefirstapp.model.Post
+import retrofit2.HttpException
+import java.io.IOException
 
 class DetailsViewModel(private val postId: Int) : ViewModel() {
 
     private val repository = PostRepository(RetrofitInstance.api)
 
-    private val _post = MutableStateFlow<Post?>(null)
-    val post: StateFlow<Post?> = _post
+    private val _uiState = MutableStateFlow<UiState<Post>>(UiState.Loading)
+    val uiState: StateFlow<UiState<Post>> = _uiState
 
     init {
         fetchPost()
@@ -22,10 +25,17 @@ class DetailsViewModel(private val postId: Int) : ViewModel() {
 
     private fun fetchPost() {
         viewModelScope.launch {
+            _uiState.value = UiState.Loading
+
             try {
-                _post.value = repository.getPost(postId)
+                val post = repository.getPost(postId)
+                _uiState.value = UiState.Success(post)
+            } catch (e: IOException) {
+                _uiState.value = UiState.Error("No Internet Connection")
+            } catch (e: HttpException) {
+                _uiState.value = UiState.Error("Server Error: ${e.code()}")
             } catch (e: Exception) {
-                e.printStackTrace()
+                _uiState.value = UiState.Error("Unknown Error")
             }
         }
     }
