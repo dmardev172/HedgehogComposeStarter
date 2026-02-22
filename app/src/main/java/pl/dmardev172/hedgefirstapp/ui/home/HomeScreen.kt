@@ -22,14 +22,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import pl.dmardev172.hedgefirstapp.UiState
 import pl.dmardev172.hedgefirstapp.model.Post
+import pl.dmardev172.hedgefirstapp.viewmodels.PostSharedViewModel
 
 @Composable
 fun HomeScreen(
-    onItemClick: (Int) -> Unit,
-    viewModel: HomeViewModel = viewModel()
+    viewModel: PostSharedViewModel,
+    onNavigateToDetails: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -74,7 +74,11 @@ fun HomeScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(8.dp)
-                                    .clickable { onItemClick(post.id) }
+                                    .clickable {
+                                        // onItemClick(post.id)
+                                        viewModel.selectPost(post)
+                                        onNavigateToDetails()
+                                    }
                             ) {
                                 Text(
                                     text = post.title,

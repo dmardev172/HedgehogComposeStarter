@@ -1,18 +1,19 @@
 package pl.dmardev172.hedgefirstapp.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavType
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import pl.dmardev172.hedgefirstapp.screen.Screen
 import pl.dmardev172.hedgefirstapp.ui.details.DetailsScreen
 import pl.dmardev172.hedgefirstapp.ui.home.HomeScreen
+import pl.dmardev172.hedgefirstapp.viewmodels.PostSharedViewModel
 
 @Composable
 fun AppNavGraph() {
     val navController = rememberNavController()
+    val sharedViewModel: PostSharedViewModel = viewModel()
 
     NavHost(
         navController = navController,
@@ -20,20 +21,17 @@ fun AppNavGraph() {
     ) {
         composable(Screen.Home.route) {
             HomeScreen(
-                onItemClick = { id ->
-                    navController.navigate(Screen.Details.createRoute(id))
-                }
+                viewModel = sharedViewModel,
+                onNavigateToDetails = { navController.navigate(Screen.Details.route) }
             )
         }
 
-        composable(
-            route = Screen.Details.route,
-            arguments = listOf(navArgument("id") {
-                type = NavType.IntType
-            })
-        ) { backStackEntry ->
-            val id = backStackEntry.arguments?.getInt("id") ?: 0
-            DetailsScreen(id = id, onBack = { navController.popBackStack() })
+        composable(route = Screen.Details.route) {
+//            val id = backStackEntry.arguments?.getInt("id") ?: 0
+            DetailsScreen(
+                viewModel = sharedViewModel,
+                onBack = { navController.popBackStack() }
+            )
         }
     }
 }

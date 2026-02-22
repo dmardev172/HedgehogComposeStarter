@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
@@ -16,49 +15,27 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
-import pl.dmardev172.hedgefirstapp.UiState
+import pl.dmardev172.hedgefirstapp.viewmodels.PostSharedViewModel
 
 @Composable
 fun DetailsScreen(
-    id: Int,
+    viewModel: PostSharedViewModel,
     onBack: () -> Unit
 ) {
-    val viewModel: DetailsViewModel = viewModel(
-        factory = object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return DetailsViewModel(id) as T
-            }
-        }
-    )
+    val post by viewModel.selectedPost.collectAsState()
 
-    val state by viewModel.uiState.collectAsState()
+    if (post == null) {
+        Text("Out of data")
+        return
+    }
 
     Surface(modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)) {
         Column(modifier = Modifier.padding(16.dp)) {
+            Text(text = post!!.title, style = MaterialTheme.typography.headlineMedium)
 
-            when (state) {
+            Spacer(modifier = Modifier.height(24.dp))
 
-                UiState.Loading -> {
-                    CircularProgressIndicator()
-                }
-
-                is UiState.Error -> {
-                    Text(text = (state as UiState.Error).message)
-                }
-
-                is UiState.Success -> {
-                    val post = (state as UiState.Success).data
-                    Text(
-                        text = post.title,
-                        style = MaterialTheme.typography.headlineMedium
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Text(text = post.body)
-                }
-            }
+            Text(text = post!!.body)
 
             Spacer(modifier = Modifier.height(24.dp))
 
