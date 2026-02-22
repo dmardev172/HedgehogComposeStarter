@@ -3,6 +3,7 @@ package pl.dmardev172.hedgefirstapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -12,11 +13,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import pl.dmardev172.hedgefirstapp.screen.ItemsScreen
 import pl.dmardev172.hedgefirstapp.screen.ProfileScreen
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import pl.dmardev172.hedgefirstapp.ui.theme.HedgeFirstAppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen()
         setContent {
             HedgeFirstAppTheme {
                 // A surface container using the 'background' color from the theme
@@ -26,6 +29,13 @@ class MainActivity : ComponentActivity() {
                 ) {
 //                    ItemsScreen()
                     ProfileScreen()
+//                    Greeting("Splash Screen")
+/*
+                    Column {
+                        MyScreen()
+                        MyOtherScreen()
+                    }
+*/
                 }
             }
         }
