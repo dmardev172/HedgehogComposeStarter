@@ -23,6 +23,10 @@ class HomeViewModel : ViewModel() {
         fetchPosts()
     }
 
+    fun retry() {
+        fetchPosts()
+    }
+
     private fun fetchPosts() {
         viewModelScope.launch {
             _uiState.value = UiState.Loading

@@ -9,10 +9,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -26,39 +32,56 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel()
 ) {
     val state by viewModel.uiState.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
 
-    when (state) {
-
-        UiState.Loading -> {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) { CircularProgressIndicator() }
+    // Side Effect - show Snackbar if error only
+    LaunchedEffect(state) {
+        if (state is UiState.Error) {
+            snackbarHostState.showSnackbar(
+                message = (state as UiState.Error).message,
+                actionLabel = "Try Again"
+            ).let { result ->
+                if (result == SnackbarResult.ActionPerformed) {
+                    viewModel.retry()
+                }
+            }
         }
+    }
 
-        is UiState.Error -> {
-            val message = (state as UiState.Error).message
+    Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { padding ->
 
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) { Text(text = message) }
-        }
+        Box(modifier = Modifier.fillMaxSize().padding(padding)) {
 
-        is UiState.Success -> {
-            val posts = (state as UiState.Success<List<Post>>).data
+            when (state) {
 
-            LazyColumn {
-                items(posts) { post ->
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                            .clickable { onItemClick(post.id) }) {
-                        Text(
-                            text = post.title,
-                            modifier = Modifier.padding(16.dp)
-                        )
+                UiState.Loading -> {
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+
+                is UiState.Error -> {
+                    // May be empty because Snackbar shows the error
+                }
+
+                is UiState.Success -> {
+                    val posts = (state as UiState.Success<List<Post>>).data
+
+                    LazyColumn {
+                        items(posts) { post ->
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(8.dp)
+                                    .clickable { onItemClick(post.id) }
+                            ) {
+                                Text(
+                                    text = post.title,
+                                    modifier = Modifier.padding(16.dp)
+                                )
+                            }
+                        }
                     }
                 }
             }
